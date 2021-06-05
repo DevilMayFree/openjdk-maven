@@ -1,4 +1,4 @@
-FROM openjdk:8u292-jdk
+FROM openjdk:8-jdk-alpine
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
