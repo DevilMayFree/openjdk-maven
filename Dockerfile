@@ -1,12 +1,12 @@
-FROM openjdk:8-jdk-alpine
+FROM bellsoft/liberica-openjdk-alpine:21.0.1
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk add --no-cache curl tar bash procps
 
-ARG MAVEN_VERSION=3.6.3
+ARG MAVEN_VERSION=3.9.6
 ARG USER_HOME_DIR="/root"
-ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG SHA=706f01b20dec0305a822ab614d51f32b07ee11d0218175e55450242e49d2156386483b506b3a4e8a03ac8611bae96395fd5eec15f50d3013d5deed6d1ee18224
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
@@ -19,6 +19,7 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV TZ=Asia/Shanghai
 RUN apk update \
     && apk add tzdata \
+    && apk cache clean \
     && echo "${TZ}" > /etc/timezone \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && rm /var/cache/apk/*
@@ -36,3 +37,4 @@ COPY settings-docker.xml /usr/share/maven/ref/
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
+
